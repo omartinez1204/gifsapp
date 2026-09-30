@@ -3,17 +3,19 @@ import { CustomHeader } from './components/CustomHeader';
 import { GifsList } from './components/GifsList';
 import { PreviousSearches } from './components/PreviousSearches';
 import { SearchPanel } from './components/SearchPanel';
-import { gifsList } from './db/data';
+import { type Gif } from './db/data';
 import { getGifsFromGiphy } from './api/get-gifs';
 
 export const GifsApp = () => {
-  const [gifSearches, setGifsSearched] = useState(['naruto', 'bilma', 'vegueta', 'goku']);
+  const [gifSearches, setGifsSearched] = useState<string[]>([]);
+  const [gifs, setGifs] = useState<Gif[]>([]);
 
   const addNewGif = async (gif: string) => {
     const newGif = gif.trim().toLowerCase();
     if (gifSearches.includes(newGif)) return;
     try {
-      await getGifsFromGiphy(newGif);
+      const data:Gif[] = await getGifsFromGiphy(newGif);
+      setGifs(data);
     } catch (error) {
       console.log(error)
     }
@@ -28,7 +30,7 @@ export const GifsApp = () => {
       <CustomHeader titulo='App de gifs chidos' subtitulo='Busca algo' />
       <SearchPanel onAddNewGif={addNewGif} />
       <PreviousSearches searches={gifSearches} onClicklbl={handleClickButton} />
-      <GifsList gifsList={gifsList} />
+      <GifsList gifsList={gifs} />
     </>
   )
 }
