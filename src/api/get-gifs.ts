@@ -4,9 +4,9 @@ import type { GifsResponse } from '../interfaces/gifs-response';
 export const getGifsFromGiphy = async (gif: string) => {
     const response = await axios.get<GifsResponse>('https://api.giphy.com/v1/gifs/search', {
         params: {
-            api_key: 'ubrfrOWotEUQ0TEzgE4Ud5mpWKhnnXZX',
+            api_key:import.meta.env.VITE_APIKEY,
             q: gif,
-            limit: 10,
+            limit: 8,
             lang: 'es'
         }
     })
