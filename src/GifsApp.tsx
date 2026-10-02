@@ -1,45 +1,13 @@
-import { useRef, useState } from 'react';
 import { CustomHeader } from './components/CustomHeader';
 import { GifsList } from './components/GifsList';
 import { PreviousSearches } from './components/PreviousSearches';
 import { SearchPanel } from './components/SearchPanel';
-import { type Gif } from './db/data';
-import { getGifsFromGiphy } from './api/get-gifs';
-
-/*
-Record{
-  'goku': Gifs[],
-  'naruto': Gifs[]
-}
-*/
+import { customHook } from './hooks/customHook'
 
 export const GifsApp = () => {
   
-  const [gifSearches, setGifsSearched] = useState<string[]>([]);
-  const [gifs, setGifs] = useState<Gif[]>([]);
-  const cacheDeGifs = useRef<Record<string, Gif[]>>({});
-
-//!-----------------------------------------------------------------------
-  const addNewGif = async (gif: string) => {
-    const newGif = gif.trim().toLowerCase();
-    if (gifSearches.includes(newGif)) return;
-    try {
-      const data: Gif[] = await getGifsFromGiphy(newGif);
-      cacheDeGifs.current[gif] = data;
-      setGifs(data);
-    } catch (error) {
-      console.log(error)
-    }
-    setGifsSearched([newGif, ...gifSearches].slice(0, 5));
-  }
-//!-----------------------------------------------------------------------
-  const handleClickButton = async(lblClicked: string) => {
-    if(cacheDeGifs.current[lblClicked]){
-      setGifs( cacheDeGifs.current[lblClicked]);
-    }
-    return;
-  }
-
+  const { addNewGif, gifSearches, handleClickButton, gifs } = customHook();
+  
   return (
     <>
       <CustomHeader titulo='App de gifs chidos' subtitulo='Busca algo' />
@@ -49,4 +17,3 @@ export const GifsApp = () => {
     </>
   )
 }
-
